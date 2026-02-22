@@ -1,0 +1,98 @@
+/* ============================================================
+   styles/detail-modal.css - Detail View Modal Styles
+   ============================================================ */
+
+.detail-modal-overlay {
+  position: fixed; inset: 0; z-index: 250;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+  padding: 1rem;
+}
+.detail-modal-overlay.open { opacity: 1; pointer-events: all; }
+.detail-modal-box {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 700px;
+  max-height: 92vh; overflow-y: auto; position: relative;
+  transform: scale(0.95); transition: transform 0.25s ease;
+}
+.detail-modal-overlay.open .detail-modal-box { transform: scale(1); }
+
+.detail-close {
+  position: absolute; top: 1rem; right: 1rem; z-index: 10;
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  color: var(--text-muted); border-radius: 50%;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; cursor: pointer; transition: all 0.2s;
+}
+.detail-close:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+.detail-header {
+  display: flex; gap: 1.5rem; padding: 1.5rem; align-items: flex-start;
+}
+.detail-img {
+  width: 160px; min-width: 160px; height: 230px;
+  object-fit: cover; border-radius: 10px;
+  border: 2px solid var(--border);
+  cursor: default;
+}
+.detail-img-placeholder {
+  width: 160px; min-width: 160px; height: 230px;
+  background: var(--bg-secondary); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem; border: 2px solid var(--border);
+}
+.detail-info { flex: 1; min-width: 0; }
+.detail-title {
+  font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700;
+  line-height: 1.3; margin-bottom: 0.75rem;
+}
+.detail-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.detail-rating { margin-bottom: 1rem; font-size: 0.9rem; }
+
+.detail-meta-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.meta-item { display: flex; flex-direction: column; gap: 0.1rem; }
+.meta-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.meta-item span:last-child { font-size: 0.85rem; font-weight: 500; }
+
+.detail-links { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.detail-link-btn {
+  padding: 0.45rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.stream-btn { background: var(--gradient); color: #000; }
+.stream-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.detail-notes {
+  margin: 0 1.5rem 1.25rem;
+  background: var(--bg-secondary); border-radius: 10px;
+  padding: 1rem; border: 1px solid var(--border);
+}
+.detail-notes h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+.detail-notes p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+
+.detail-youtube {
+  margin: 0 1.5rem 1.25rem;
+}
+.detail-youtube h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+.detail-footer-actions {
+  display: flex; gap: 0.75rem; padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border); background: var(--bg-secondary);
+  border-radius: 0 0 16px 16px;
+}
+.detail-footer-actions .btn-edit,
+.detail-footer-actions .btn-delete {
+  padding: 0.55rem 1.25rem; font-size: 0.88rem; border-radius: 8px;
+}
+
+@media (max-width: 540px) {
+  .detail-header { flex-direction: column; align-items: center; }
+  .detail-img, .detail-img-placeholder { width: 140px; min-width: 140px; }
+  .detail-title { text-align: center; }
+  .detail-badges, .detail-links { justify-content: center; }
+  .detail-meta-grid { grid-template-columns: 1fr; }
+}

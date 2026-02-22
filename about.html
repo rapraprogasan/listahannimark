@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Listahan ng AnimeManga</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎌</text></svg>">
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    .about-hero { text-align:center; padding: 3rem 1rem; }
+    .about-hero .big-icon { font-size: 5rem; display:block; margin-bottom:1rem; }
+    .about-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:1.25rem; margin:2rem 0; }
+    .about-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; }
+    .about-card h3 { font-family:'Rajdhani',sans-serif; font-size:1.1rem; margin-bottom:0.5rem; color:var(--accent); }
+    .dev-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; text-align:center; max-width:420px; margin:0 auto 2rem; }
+    .dev-avatar { font-size:4rem; display:block; margin-bottom:1rem; }
+    .dev-name { font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .feature-list { list-style:none; }
+    .feature-list li { padding:0.4rem 0; font-size:0.9rem; color:var(--text-secondary); border-bottom:1px solid var(--border); }
+    .feature-list li:last-child { border:none; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <a href="index.html" class="header-brand">🎌 Listahan</a>
+  <nav class="site-nav">
+    <a href="index.html" class="nav-link" data-page="home">Dashboard</a>
+    <a href="anime.html" class="nav-link">Anime</a>
+    <a href="manga.html" class="nav-link">Manga</a>
+    <a href="manhwa.html" class="nav-link">Manhwa</a>
+  </nav>
+  <div class="header-right">
+    <button id="themeToggle" onclick="Common.toggleTheme()">🌙</button>
+    <div id="headerUser"></div>
+  </div>
+</header>
+
+<main class="page-wrapper">
+  <div class="about-hero">
+    <span class="big-icon">🎌</span>
+    <h1 class="page-title">About Listahan ng AnimeManga</h1>
+    <p style="color:var(--text-muted); max-width:520px; margin:0.75rem auto 0;">Your personal tracker for Anime, Manga, and Manhwa — so you'll never forget a title again.</p>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>📺 What is Listahan?</h3>
+      <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">Listahan (Filipino word for "list") is a personal tracker app where you can save all the anime, manga, and manhwa titles you've watched or plan to watch — with ratings, episode counts, notes, and more.</p>
+    </div>
+    <div class="about-card">
+      <h3>☁️ Cloud-Powered</h3>
+      <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">All your data is stored in Google Sheets via Google Apps Script. Your list is accessible from any device as long as you log in. No data lost!</p>
+    </div>
+    <div class="about-card">
+      <h3>🔒 Private Accounts</h3>
+      <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">Each user has their own private list. Create an account with a username and password — your data is completely separate from other users.</p>
+    </div>
+    <div class="about-card">
+      <h3>🎯 Features</h3>
+      <ul class="feature-list">
+        <li>✅ Anime, Manga, Manhwa tracking</li>
+        <li>⭐ Rating system (0–10)</li>
+        <li>📝 Personal notes per title</li>
+        <li>🎬 YouTube trailer embed</li>
+        <li>🔗 Streaming site links</li>
+        <li>🌙 Dark / Light mode</li>
+        <li>🔍 Search your collection</li>
+        <li>📊 Dashboard with stats</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="section-title">👨‍💻 About the Developer</h2>
+  <div class="dev-card">
+    <span class="dev-avatar">👨‍💻</span>
+    <div class="dev-name">Mark Joseph Rogasan</div>
+    <p style="color:var(--text-muted); font-size:0.88rem; margin:0.5rem 0 1rem;">Developer & Anime Enthusiast 🎌</p>
+    <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">Built Listahan as a personal project to solve a real problem — forgetting the titles of anime and manga that were once loved. Combining passion for anime and web development, Listahan was born.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-brand">🎌 Listahan ng AnimeManga</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p class="footer-copy">Made with ❤️ by Mark Joseph Rogasan &copy; 2026</p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/database.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notification.js"></script>
+<script src="js/common.js"></script>
+<script>
+  Auth.init(); Common.initTheme(); Common.renderUserInfo();
+</script>
+</body>
+</html>

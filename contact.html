@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Listahan ng AnimeManga</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎌</text></svg>">
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    .contact-grid { display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; }
+    .contact-info { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; }
+    .contact-info h3 { font-family:'Rajdhani',sans-serif; font-size:1.1rem; color:var(--accent); margin-bottom:1rem; }
+    .contact-item { display:flex; gap:0.75rem; align-items:flex-start; margin-bottom:1rem; }
+    .contact-item-icon { font-size:1.2rem; }
+    .contact-item-text { font-size:0.88rem; color:var(--text-secondary); line-height:1.5; }
+    .contact-form-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; }
+    .contact-form-wrap h3 { font-family:'Rajdhani',sans-serif; font-size:1.1rem; margin-bottom:1rem; }
+    @media (max-width:640px) { .contact-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <a href="index.html" class="header-brand">🎌 Listahan</a>
+  <nav class="site-nav">
+    <a href="index.html" class="nav-link">Dashboard</a>
+    <a href="anime.html" class="nav-link">Anime</a>
+    <a href="manga.html" class="nav-link">Manga</a>
+    <a href="manhwa.html" class="nav-link">Manhwa</a>
+  </nav>
+  <div class="header-right">
+    <button id="themeToggle" onclick="Common.toggleTheme()">🌙</button>
+    <div id="headerUser"></div>
+  </div>
+</header>
+
+<main class="page-wrapper" style="max-width:860px;">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">📬 Contact</h1>
+      <p class="page-subtitle">Get in touch with the developer</p>
+    </div>
+  </div>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>👨‍💻 Developer Info</h3>
+      <div class="contact-item">
+        <span class="contact-item-icon">👤</span>
+        <div class="contact-item-text">
+          <strong>Mark Joseph Rogasan</strong><br>
+          Developer & Creator of Listahan ng AnimeManga
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-item-icon">📧</span>
+        <div class="contact-item-text">
+          Reach out via the contact form for inquiries, bug reports, or suggestions.
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-item-icon">🐛</span>
+        <div class="contact-item-text">
+          <strong>Found a bug?</strong><br>
+          Please describe the issue and your username (not password) so we can help fix it quickly.
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-item-icon">💡</span>
+        <div class="contact-item-text">
+          <strong>Feature request?</strong><br>
+          We love suggestions! Tell us what features would make your experience better.
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap">
+      <h3>📝 Send a Message</h3>
+      <form onsubmit="handleContact(event)">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" id="contactName" class="form-control" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select id="contactSubject" class="form-control">
+            <option value="bug">🐛 Bug Report</option>
+            <option value="feature">💡 Feature Request</option>
+            <option value="account">🔒 Account Issue</option>
+            <option value="other">💬 Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea id="contactMessage" class="form-control" rows="5" placeholder="Describe your issue or suggestion..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">📨 Send Message</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-brand">🎌 Listahan ng AnimeManga</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p class="footer-copy">Made with ❤️ by Mark Joseph Rogasan &copy; 2026</p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/database.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notification.js"></script>
+<script src="js/common.js"></script>
+<script>
+  Auth.init(); Common.initTheme(); Notification.init(); Common.renderUserInfo();
+
+  function handleContact(e) {
+    e.preventDefault();
+    const name = document.getElementById('contactName').value.trim();
+    const msg = document.getElementById('contactMessage').value.trim();
+    if (!name || !msg) { Notification.warning('Please fill all fields'); return; }
+    // Since this is a static site, we just show success
+    Notification.success(`Thanks ${name}! Message noted. (In production, integrate with EmailJS or Formspree.)`);
+    e.target.reset();
+  }
+</script>
+</body>
+</html>

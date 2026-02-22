@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Listahan ng AnimeManga</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎌</text></svg>">
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    .policy-section { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; margin-bottom:1.25rem; }
+    .policy-section h3 { font-family:'Rajdhani',sans-serif; color:var(--accent); margin-bottom:0.75rem; font-size:1.1rem; }
+    .policy-section p, .policy-section li { font-size:0.88rem; color:var(--text-secondary); line-height:1.7; }
+    .policy-section ul { padding-left:1.25rem; margin-top:0.5rem; }
+    .policy-section li { margin-bottom:0.35rem; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <a href="index.html" class="header-brand">🎌 Listahan</a>
+  <nav class="site-nav">
+    <a href="index.html" class="nav-link">Dashboard</a>
+    <a href="anime.html" class="nav-link">Anime</a>
+    <a href="manga.html" class="nav-link">Manga</a>
+    <a href="manhwa.html" class="nav-link">Manhwa</a>
+  </nav>
+  <div class="header-right">
+    <button id="themeToggle" onclick="Common.toggleTheme()">🌙</button>
+    <div id="headerUser"></div>
+  </div>
+</header>
+
+<main class="page-wrapper" style="max-width:780px;">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">🔒 Privacy Policy</h1>
+      <p class="page-subtitle">Last updated: 2025</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h3>Data We Collect</h3>
+    <p>Listahan collects minimal data to provide the service:</p>
+    <ul>
+      <li>Username and password (stored in Google Sheets)</li>
+      <li>Your anime/manga/manhwa list entries (title, status, rating, notes, etc.)</li>
+      <li>Security question and answer (optional, for password recovery)</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h3>How We Store Your Data</h3>
+    <p>All data is stored in a private Google Sheets spreadsheet owned by the developer. Your data is tied to your username and only accessible when you are logged in. We do not share your data with third parties.</p>
+  </div>
+
+  <div class="policy-section">
+    <h3>Passwords</h3>
+    <p>⚠️ Note: Passwords are currently stored as plain text in Google Sheets. Please do not reuse passwords from other important accounts. We recommend using a unique password for Listahan.</p>
+  </div>
+
+  <div class="policy-section">
+    <h3>Cookies & Local Storage</h3>
+    <p>We use localStorage to remember your login session and theme preference. No tracking cookies are used. You can clear your session at any time by clicking "Logout".</p>
+  </div>
+
+  <div class="policy-section">
+    <h3>Your Rights</h3>
+    <ul>
+      <li>You can delete any entry from your list at any time</li>
+      <li>You can change your password using the forgot password feature</li>
+      <li>You can contact the developer to request full data deletion</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h3>Contact</h3>
+    <p>For any privacy concerns, please visit the <a href="contact.html">Contact page</a> and reach out to the developer.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-brand">🎌 Listahan ng AnimeManga</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+  </div>
+   <p class="footer-copy">Made with ❤️ by Mark Joseph Rogasan &copy; 2026</p>
+
+<script src="js/config.js"></script>
+<script src="js/database.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notification.js"></script>
+<script src="js/common.js"></script>
+<script>Auth.init(); Common.initTheme(); Common.renderUserInfo();</script>
+</body>
+</html>

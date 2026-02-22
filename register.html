@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Listahan ng AnimeManga</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎌</text></svg>">
+  <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body data-page="register">
+
+<!-- Left side welcome section -->
+<div class="welcome-section">
+  <h1>Join<br>Listahan</h1>
+  <p>Start tracking your anime and manga journey today</p>
+  <ul class="feature-list">
+    <li>Track your watched anime</li>
+    <li>Discover new manga</li>
+    <li>Create your personal list</li>
+    <li>Connect with other fans</li>
+  </ul>
+  </div>
+</div>
+
+<header class="auth-header">
+  <a href="index.html" class="auth-brand">🎌 Listahan</a>
+  <button class="auth-theme-btn" onclick="toggleAuthTheme()">☀️</button>
+</header>
+
+<div class="auth-box register-box">
+  <div class="auth-header-content">
+    <div class="greeting">Create Account</div>
+    <div class="subtitle">Join Listahan ng AnimeManga</div>
+  </div>
+
+  <form id="registerForm">
+    <!-- Username Field (Larger) -->
+    <div class="auth-form-group large">
+      <label class="auth-label" for="username">Username *</label>
+      <input type="text" id="username" class="auth-input large-input" placeholder="Choose a username" autocomplete="username" required>
+      <p class="auth-hint">This will be your unique login ID</p>
+    </div>
+
+    <!-- Password Field (Larger) -->
+    <div class="auth-form-group large">
+      <label class="auth-label" for="password">Password *</label>
+      <div class="auth-input-wrap">
+        <input type="password" id="password" class="auth-input has-icon large-input" placeholder="At least 6 characters" autocomplete="new-password" required>
+        <button type="button" class="toggle-pass large-toggle" onclick="togglePass('password', this)">Show</button>
+      </div>
+    </div>
+
+    <!-- Confirm Password Field (Larger) -->
+    <div class="auth-form-group large">
+      <label class="auth-label" for="confirmPassword">Confirm Password *</label>
+      <div class="auth-input-wrap">
+        <input type="password" id="confirmPassword" class="auth-input has-icon large-input" placeholder="Repeat your password" required>
+        <button type="button" class="toggle-pass large-toggle" onclick="togglePass('confirmPassword', this)">Show</button>
+      </div>
+    </div>
+
+    <!-- Password Recovery Hint Section (Larger) -->
+    <div class="security-box large-security">
+      <div class="security-box-header">
+        <span class="security-icon">🔒</span>
+        <span class="security-title">Password Recovery Hint (Optional but recommended)</span>
+      </div>
+      
+      <div class="auth-form-group">
+        <label class="auth-label" for="hintQuestion">Security Question</label>
+        <select id="hintQuestion" class="auth-input large-input">
+          <option value="">Select a question...</option>
+          <option value="What is your favorite anime?">What is your favorite anime?</option>
+          <option value="What is your first manga title?">What is your first manga title?</option>
+          <option value="What is your pet's name?">What is your pet's name?</option>
+          <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+          <option value="What city were you born in?">What city were you born in?</option>
+          <option value="What is your favorite character?">What is your favorite character?</option>
+        </select>
+      </div>
+
+      <div class="auth-form-group">
+        <label class="auth-label" for="hintAnswer">Your Answer</label>
+        <input type="text" id="hintAnswer" class="auth-input large-input" placeholder="Your answer (case-insensitive)">
+        <p class="auth-hint">Used to verify your identity if you forget your password</p>
+      </div>
+    </div>
+
+    <!-- Submit Button (Larger) -->
+    <button type="submit" class="auth-btn large-btn">🚀 Create Account</button>
+  </form>
+
+  <!-- Login Link -->
+  <div class="auth-footer">
+    <p>Already have an account? <a href="login.html" class="auth-link">Login here</a></p>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/database.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notification.js"></script>
+<script src="js/common.js"></script>
+<script src="js/auth-page.js"></script>
+<script>
+  function togglePass(id, btn) {
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.textContent = input.type === 'password' ? 'Show' : 'Hide';
+  }
+  
+  function toggleAuthTheme() {
+    const d = document.documentElement;
+    const t = d.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    d.setAttribute('data-theme', t);
+    localStorage.setItem('listahan_theme', t);
+    document.querySelector('.auth-theme-btn').textContent = t === 'light' ? '☀️' : '🌙';
+  }
+  
+  const t = localStorage.getItem('listahan_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelector('.auth-theme-btn').textContent = t === 'light' ? '☀️' : '🌙';
+</script>
+</body>
+</html>

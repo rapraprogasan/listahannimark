@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listahan ng AnimeManga — Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎌</text></svg>">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/detail-modal.css">
+  <style>
+    /* User Dropdown Styles */
+    .user-dropdown-container {
+      position: relative;
+    }
+
+    .user-dropdown {
+      position: relative;
+    }
+
+    .user-dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .user-dropdown-btn:hover {
+      background: var(--border-color);
+      border-color: var(--accent);
+    }
+
+    .user-avatar {
+      font-size: 1.1rem;
+    }
+
+    .user-name {
+      font-weight: 500;
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dropdown-arrow {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      transition: transform 0.2s;
+      margin-left: auto;
+    }
+
+    .user-dropdown.active .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 220px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 8px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s;
+      z-index: 1000;
+    }
+
+    .user-dropdown.active .user-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(100, 108, 255, 0.1);
+    }
+
+    .dropdown-item.logout-item:hover {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+    }
+
+    .dropdown-icon {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      min-width: 24px;
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+
+    /* Auth buttons for logged out state */
+    .auth-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .login-link, .register-link {
+      padding: 8px 16px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .login-link {
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .login-link:hover {
+      background: var(--border-color);
+    }
+
+    .register-link {
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+    }
+
+    .register-link:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .user-name {
+        max-width: 60px;
+      }
+      
+      .user-dropdown-btn {
+        padding: 6px 12px;
+      }
+      
+      .auth-buttons {
+        gap: 4px;
+      }
+      
+      .login-link, .register-link {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .user-dropdown-menu {
+        min-width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen">
+  <div class="loading-logo">🎌 Listahan</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- Header with Dropdown -->
+<header class="site-header">
+  <a href="index.html" class="header-brand">🎌 Listahan</a>
+  <nav class="site-nav">
+    <a href="index.html" class="nav-link active" data-page="home">Dashboard</a>
+    <a href="anime.html" class="nav-link" data-page="anime">Anime</a>
+    <a href="manga.html" class="nav-link" data-page="manga">Manga</a>
+    <a href="manhwa.html" class="nav-link" data-page="manhwa">Manhwa</a>
+  </nav>
+  <div class="header-right">
+    <div class="db-status offline" id="dbStatus">
+      <span class="db-dot"></span>Offline
+    </div>
+    <button id="themeToggle">🌙</button>
+    <div id="headerUser" class="user-dropdown-container">
+      <!-- Dynamically populated by auth.js -->
+    </div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="page-wrapper">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Your anime, manga & manhwa collection</p>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search your collection...">
+      <div id="searchResults"></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">Total Titles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statAnime">0</div>
+      <div class="stat-label">Anime</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statManga">0</div>
+      <div class="stat-label">Manga</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statManhwa">0</div>
+      <div class="stat-label">Manhwa</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statWatching">0</div>
+      <div class="stat-label">Watching</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statComplete">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+
+  <!-- Recent -->
+  <h2 class="section-title">📺 Recently Updated</h2>
+  <div id="recentContainer">
+    <div class="loading-state">
+      <div class="spinner-ring"></div>
+      <p>Loading your collection...</p>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <h2 class="section-title" style="margin-top: 2rem;">🔗 Quick Add</h2>
+  <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:2rem;">
+    <a href="anime.html" class="filter-tab" style="background:var(--bg-card)">➕ Add Anime</a>
+    <a href="manga.html" class="filter-tab" style="background:var(--bg-card)">➕ Add Manga</a>
+    <a href="manhwa.html" class="filter-tab" style="background:var(--bg-card)">➕ Add Manhwa</a>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-brand">🎌 Listahan ng AnimeManga</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+  </div>
+ <p class="footer-copy">Made with ❤️ by Mark Joseph Rogasan &copy; 2026</p>
+</footer>
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script src="js/database.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notification.js"></script>
+<script src="js/common.js"></script>
+<script src="js/detail-modal.js"></script>
+<script src="js/index.js"></script>
+
+<script>
+  // Init db status indicator
+  const dbStatusEl = document.getElementById('dbStatus');
+  Database.onStatusChange(online => {
+    dbStatusEl.className = `db-status ${online ? 'online' : 'offline'}`;
+    dbStatusEl.innerHTML = `<span class="db-dot"></span>${online ? 'Online' : 'Offline'}`;
+  });
+
+  // Hide loading screen
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const ls = document.getElementById('loadingScreen');
+      if (ls) { 
+        ls.classList.add('hide'); 
+        setTimeout(() => ls.remove(), 500); 
+      }
+    }, 1200);
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const dropdowns = document.querySelectorAll('.user-dropdown');
+    dropdowns.forEach(dropdown => {
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+  });
+
+  // Toggle dropdown function
+  window.toggleDropdown = function(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
+    // Close all other dropdowns
+    document.querySelectorAll('.user-dropdown').forEach(dropdown => {
+      if (dropdown !== event?.currentTarget?.parentElement) {
+        dropdown.classList.remove('active');
+      }
+    });
+    
+    // Toggle current dropdown
+    const dropdown = event?.currentTarget?.parentElement;
+    if (dropdown) {
+      dropdown.classList.toggle('active');
+    }
+  };
+
+  // Logout function
+  window.logout = function() {
+    if (Auth) {
+      Auth.logout();
+    } else {
+      localStorage.removeItem(CONFIG.SESSION_KEY);
+      window.location.href = 'login.html';
+    }
+  };
+
+  // Update header user display
+  function updateHeaderUser() {
+    const headerUser = document.getElementById('headerUser');
+    if (!headerUser) return;
+    
+    const session = localStorage.getItem(CONFIG.SESSION_KEY);
+    if (session) {
+      try {
+        const user = JSON.parse(session);
+        headerUser.innerHTML = `
+          <div class="user-dropdown">
+            <button class="user-dropdown-btn" onclick="toggleDropdown(event)">
+              <span class="user-avatar">👤</span>
+              <span class="user-name">${user.username}</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="user-dropdown-menu">
+              </a>
+              <a href="change-password.html" class="dropdown-item">
+                <span class="dropdown-icon">🔐</span>
+                Change Password
+              </a>
+              <div class="dropdown-divider"></div>
+              <button onclick="logout()" class="dropdown-item logout-item">
+                <span class="dropdown-icon">🚪</span>
+                Logout
+              </button>
+            </div>
+          </div>
+        `;
+      } catch (e) {
+        console.error('Error parsing user session:', e);
+      }
+    } else {
+      headerUser.innerHTML = `
+        <div class="auth-buttons">
+          <a href="login.html" class="login-link">Login</a>
+          <a href="register.html" class="register-link">Register</a>
+        </div>
+      `;
+    }
+  }
+
+  // Call updateHeaderUser when page loads
+  document.addEventListener('DOMContentLoaded', updateHeaderUser);
+  
+  // Also update when storage changes (for multi-tab support)
+  window.addEventListener('storage', function(e) {
+    if (e.key === CONFIG.SESSION_KEY) {
+      updateHeaderUser();
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listahan — Manga</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/detail-modal.css">
+  <style>
+    /* User Dropdown Styles */
+    .user-dropdown-container {
+      position: relative;
+    }
+    .user-dropdown {
+      position: relative;
+    }
+    .user-dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .user-dropdown-btn:hover {
+      background: var(--border-color);
+      border-color: var(--accent);
+    }
+    .user-avatar {
+      font-size: 1.1rem;
+    }
+    .user-name {
+      font-weight: 500;
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .dropdown-arrow {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      transition: transform 0.2s;
+    }
+    .user-dropdown.active .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 220px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 8px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s;
+      z-index: 1000;
+    }
+    .user-dropdown.active .user-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .dropdown-item:hover {
+      background: rgba(100, 108, 255, 0.1);
+    }
+    .dropdown-item.logout-item:hover {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+    }
+    .dropdown-icon {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      min-width: 24px;
+    }
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+    .auth-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    .login-link, .register-link {
+      padding: 8px 16px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .login-link {
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+    .login-link:hover {
+      background: var(--border-color);
+    }
+    .register-link {
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+    }
+    .register-link:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen">
+  <div class="loading-logo">🎌 Listahan</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<!-- Header with Dropdown -->
+<header class="site-header">
+  <a href="index.html" class="header-brand">🎌 Listahan</a>
+  <nav class="site-nav">
+    <a href="index.html" class="nav-link" data-page="home">Dashboard</a>
+    <a href="anime.html" class="nav-link" data-page="anime">Anime</a>
+    <a href="manga.html" class="nav-link active" data-page="manga">Manga</a>
+    <a href="manhwa.html" class="nav-link" data-page="manhwa">Manhwa</a>
+  </nav>
+  <div class="header-right">
+    <div class="db-status offline" id="dbStatus">
+      <span class="db-dot"></span>Offline
+    </div>
+    <button id="themeToggle">🌙</button>
+    <div id="headerUser" class="user-dropdown-container"></div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="page-wrapper">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">📚 Manga List</h1>
+      <p class="page-subtitle">Track your manga journey</p>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search manga...">
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-bar">
+    <button class="filter-tab active" data-status="all">All <span class="tab-count" id="count-all">0</span></button>
+    <button class="filter-tab" data-status="watching">Reading <span class="tab-count" id="count-watching">0</span></button>
+    <button class="filter-tab" data-status="plan">Plan <span class="tab-count" id="count-plan">0</span></button>
+    <button class="filter-tab" data-status="complete">Completed <span class="tab-count" id="count-complete">0</span></button>
+    <button class="filter-tab" data-status="dropped">Dropped <span class="tab-count" id="count-dropped">0</span></button>
+    <span class="result-info"><span id="resultCount">0 titles</span></span>
+  </div>
+
+  <!-- Items Container -->
+  <div id="itemsContainer">
+    <div class="loading-state">
+      <div class="spinner-ring"></div>
+      <p>Loading manga...</p>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-brand">🎌 Listahan ng AnimeManga</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="contact.html">Contact</a>
+  </div>
+   <p class="footer-copy">Made with ❤️ by Mark Joseph Rogasan &copy; 2026</p>
+</footer>
+
+<!-- FAB Add Button -->
+<button class="btn-add" onclick="ListPage.openAddModal()" title="Add Manga">+</button>
+
+<!-- Add/Edit Modal -->
+<div id="itemModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Add Manga</h2>
+      <button class="modal-close" onclick="ListPage.closeModal()">✕</button>
+    </div>
+    <form id="itemForm">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" id="itemTitle" class="form-control" placeholder="Manga title..." required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="itemStatus" class="form-control">
+            <option value="plan">Plan to Read</option>
+            <option value="watching">Reading</option>
+            <option value="complete">Completed</option>
+            <option value="dropped">Dropped</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rating (0-10)</label>
+          <input type="number" id="itemRating" class="form-control" min="0" max="10" step="0.1" placeholder="e.g. 9.5">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Chapters Read</label>
+          <input type="number" id="itemEpCurrent" class="form-control" min="0" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Chapters</label>
+          <input type="number" id="itemEpTotal" class="form-control" min="0" placeholder="12">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Genre</label>
+          <select id="itemGenre" class="form-control">
+            <option value="">Select genre...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <input type="text" id="itemYear" class="form-control" placeholder="2024">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cover Image URL</label>
+        <input type="url" id="itemImageUrl" class="form-control" placeholder="https://...">
+        <p class="form-hint">Paste an image URL from MangaDex, AniList, etc.</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reading URL</label>
+        <input type="url" id="itemStreamUrl" class="form-control" placeholder="https://mangadex.com/...">
+        <p class="form-hint">Click image on card will open this URL</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">YouTube Trailer / PV URL</label>
+        <input type="url" id="itemYoutubeUrl" class="form-control" placeholder="https://youtube.com/watch?v=...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea id="itemNotes" class="form-control" placeholder="Your personal notes, thoughts, memorable moments..."></textarea>
+      </div>
+      <button type="submit" class="btn-submit">💾 Save</button>
+    </form>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script src="js/database.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/notification.js"></script>
+<script src="js/common.js"></script>
+<script src="js/detail-modal.js"></script>
+<script src="js/list-page-core.js"></script>
+<script src="js/manga.js"></script>
+
+<script>
+  // DB status wiring
+  const dbStatusEl = document.getElementById('dbStatus');
+  Database.onStatusChange(online => {
+    dbStatusEl.className = `db-status ${online ? 'online' : 'offline'}`;
+    dbStatusEl.innerHTML = `<span class="db-dot"></span>${online ? 'Online' : 'Offline'}`;
+  });
+
+  // Hide loading screen
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const ls = document.getElementById('loadingScreen');
+      if (ls) { ls.classList.add('hide'); setTimeout(() => ls.remove(), 500); }
+    }, 1200);
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    const dropdowns = document.querySelectorAll('.user-dropdown');
+    dropdowns.forEach(dropdown => {
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+  });
+
+  // Toggle dropdown function
+  window.toggleDropdown = function(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    document.querySelectorAll('.user-dropdown').forEach(dropdown => {
+      if (dropdown !== event?.currentTarget?.parentElement) {
+        dropdown.classList.remove('active');
+      }
+    });
+    const dropdown = event?.currentTarget?.parentElement;
+    if (dropdown) {
+      dropdown.classList.toggle('active');
+    }
+  };
+
+  // Logout function
+  window.logout = function() {
+    if (Auth) {
+      Auth.logout();
+    } else {
+      localStorage.removeItem(CONFIG.SESSION_KEY);
+      window.location.href = 'login.html';
+    }
+  };
+
+  // Update header user display
+  function updateHeaderUser() {
+    const headerUser = document.getElementById('headerUser');
+    if (!headerUser) return;
+    
+    const session = localStorage.getItem(CONFIG.SESSION_KEY);
+    if (session) {
+      try {
+        const user = JSON.parse(session);
+        headerUser.innerHTML = `
+          <div class="user-dropdown">
+            <button class="user-dropdown-btn" onclick="toggleDropdown(event)">
+              <span class="user-avatar">👤</span>
+              <span class="user-name">${user.username}</span>
+              <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="user-dropdown-menu">
+              <a href="change-password.html" class="dropdown-item">
+                <span class="dropdown-icon">🔐</span>
+                Change Password
+              </a>
+              <div class="dropdown-divider"></div>
+              <button onclick="logout()" class="dropdown-item logout-item">
+                <span class="dropdown-icon">🚪</span>
+                Logout
+              </button>
+            </div>
+          </div>
+        `;
+      } catch (e) {
+        console.error('Error parsing user session:', e);
+      }
+    } else {
+      headerUser.innerHTML = `
+        <div class="auth-buttons">
+          <a href="login.html" class="login-link">Login</a>
+          <a href="register.html" class="register-link">Register</a>
+        </div>
+      `;
+    }
+  }
+
+  // Call updateHeaderUser when page loads
+  document.addEventListener('DOMContentLoaded', updateHeaderUser);
+  window.addEventListener('storage', function(e) {
+    if (e.key === CONFIG.SESSION_KEY) {
+      updateHeaderUser();
+    }
+  });
+</script>
+</body>
+</html>
