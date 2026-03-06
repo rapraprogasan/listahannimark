@@ -317,6 +317,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   border-radius: 4px; letter-spacing: 0.3px;
 }
 .status-watching { background: #003a4a; color: #00d4ff; }
+.status-reading { background: #003a4a; color: #00d4ff; }
 .status-plan { background: #3a2a00; color: #f59e0b; }
 .status-complete { background: #003a1a; color: #10b981; }
 .status-dropped { background: #3a0000; color: #ef4444; }
@@ -1299,4 +1300,18 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   .dropdown-arrow {
     display: none;
   }
+}
+/* Para i-capitalize ang Reading text sa filter tabs */
+.filter-tab[data-status="reading"] {
+    text-transform: capitalize;
+}
+
+/* Para i-capitalize rin sa dropdown options */
+select option[value="reading"] {
+    text-transform: capitalize;
+}
+
+/* Para sa status badge sa cards */
+.status-reading {
+    text-transform: capitalize;
 }
